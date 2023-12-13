@@ -3,6 +3,7 @@ import React, {FC} from 'react';
 type TodolistPropsType = {
     title: string
     tasks: Array<TaskType>
+    removeTask:(taskID:number) => void
 }
 export type TaskType = {
     id: number
@@ -12,13 +13,26 @@ export type TaskType = {
 
 export const Todolist: FC<TodolistPropsType> = (
     {
-        title,
-        tasks
+        title,              // const title = props.title       // const {title , tasks} = props
+        tasks,           // const tasks = props.tasks      // const {title:title , tasks:tasks} = props
+        removeTask
     }
 ) => {
-    // const title = props.title
-    // const tasks = props.tasks
-    // const {title , tasks} = props
+
+    const listItems: Array<JSX.Element> = tasks.map((t) => {
+        const onClickRemoveTaskHandler = () => removeTask(t.id)
+        return (
+            <li key={t.id}>
+                <input type="checkbox" checked={t.isDone}/> <span>{t.title}</span>
+                <button onClick={onClickRemoveTaskHandler}>x</button>
+                {/*<button onClick={() => {removeTask(t.id)}}>x</button>*/}
+            </li>
+        )
+    })
+    const tasksList: JSX.Element = tasks.length //если у массива есть длина
+        ? <ul>{listItems}</ul>
+        : <span>No tasks. Empty list</span>
+
 
     return (
         <div className="todolist">
@@ -27,17 +41,7 @@ export const Todolist: FC<TodolistPropsType> = (
                 <input/>
                 <button>+</button>
             </div>
-            <ul>
-                <li>
-                    <input type="checkbox" checked={tasks[0].isDone}/> <span>{tasks[0].title}</span>
-                </li>
-                <li>
-                    <input type="checkbox" checked={tasks[1].isDone}/> <span>{tasks[1].title}</span>
-                </li>
-                <li>
-                    <input type="checkbox" checked={tasks[2].isDone}/> <span>{tasks[2].title}</span>
-                </li>
-            </ul>
+            {tasksList}
             <div>
                 <button>All</button>
                 <button>Active</button>
