@@ -4,8 +4,8 @@ import {filterType} from './App';
 type TodolistPropsType = {
     title: string
     tasks: Array<TaskType>
-    removeTask:(taskID:number) => void
-    changeFilter:(nextFilerValue:filterType) => void
+    removeTask: (id:number) => void
+    changeFilter:  (value:filterType) => void
 }
 export type TaskType = {
     id: number
@@ -15,28 +15,25 @@ export type TaskType = {
 
 export const Todolist: FC<TodolistPropsType> = (
     {
-        title,              // const title = props.title       // const {title , tasks} = props
-        tasks,           // const tasks = props.tasks      // const {title:title , tasks:tasks} = props
+        title,
+        tasks,
         removeTask,
-        changeFilter
+        changeFilter,
 
     }
 ) => {
 
-    const listItems: Array<JSX.Element> = tasks.map((t) => {
-        const onClickRemoveTaskHandler = () => removeTask(t.id)
+    const listItems = tasks.map((t) => {
         return (
             <li key={t.id}>
                 <input type="checkbox" checked={t.isDone}/> <span>{t.title}</span>
-                <button onClick={onClickRemoveTaskHandler}>x</button>
-                {/*<button onClick={() => {removeTask(t.id)}}>x</button>*/}
+                <button onClick={ () => {removeTask(t.id)} }>x</button>
             </li>
         )
     })
-    const tasksList: JSX.Element = tasks.length //если у массива есть длина
+    const tasksList = tasks.length
         ? <ul>{listItems}</ul>
         : <span>No tasks. Empty list</span>
-
 
     return (
         <div className="todolist">
