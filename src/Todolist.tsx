@@ -1,16 +1,15 @@
 import React, {FC, useState} from 'react';
 import {filterType} from './App';
-import {Simulate} from 'react-dom/test-utils';
-import error = Simulate.error;
 
 type TodolistPropsType = {
+    id: string
     title: string
     tasks: Array<TaskType>
-    removeTask: (ID: string) => void
-    changeFilter: (value: filterType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean) => void
-    filter:filterType
+    removeTask: (ID: string, todolistID: string) => void
+    changeFilter: (value: filterType, todolistID: string) => void
+    addTask: (title: string, todolistID: string) => void
+    changeTaskStatus: (taskID: string, isDone: boolean, todolistID:string) => void
+    filter: filterType
 }
 export type TaskType = {
     id: string
@@ -20,6 +19,7 @@ export type TaskType = {
 
 export const Todolist: FC<TodolistPropsType> = (
     {
+        id,
         title,
         tasks,
         removeTask,
@@ -34,13 +34,13 @@ export const Todolist: FC<TodolistPropsType> = (
     const [error, setError] = useState<string | null>(null)
     const listItems = tasks.map((t) => {
         const onRemoveHandler = () => {
-            removeTask(t.id)
+            removeTask(t.id, id)
         }
         const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-            changeTaskStatus(t.id, e.currentTarget.checked)
+            changeTaskStatus(t.id, e.currentTarget.checked, id)
         }
         return (
-            <li key={t.id} className={t.isDone  ? 'is-done' : ''}>
+            <li key={t.id} className={t.isDone ? 'is-done' : ''}>
                 <input type="checkbox"
                        onChange={onChangeHandler}
                        checked={t.isDone}
@@ -58,7 +58,7 @@ export const Todolist: FC<TodolistPropsType> = (
     const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
         setError(null)
         if (e.key === 'Enter') {
-            addTask(newTaskTitle.trim())
+            addTask(newTaskTitle.trim(), id)
             setNewTaskTitle('')
         }
     }
@@ -67,7 +67,7 @@ export const Todolist: FC<TodolistPropsType> = (
     }
     const addTaskHandler = () => {
         if (newTaskTitle.trim() !== '') {
-            addTask(newTaskTitle)
+            addTask(newTaskTitle, id)
             setNewTaskTitle('')
         } else {
             setError('Field is requered')
@@ -75,13 +75,13 @@ export const Todolist: FC<TodolistPropsType> = (
 
     }
     const onAllClickHandler = () => {
-        changeFilter('all')
+        changeFilter('all', id)
     }
     const onActiveClickHandler = () => {
-        changeFilter('active')
+        changeFilter('active', id)
     }
     const onCompletedClickHandler = () => {
-        changeFilter('completed')
+        changeFilter('completed', id)
     }
 
     return (
@@ -97,11 +97,12 @@ export const Todolist: FC<TodolistPropsType> = (
             </div>
             {tasksList}
             <div>
-                <button className={filter === 'all'? 'active-filter' : ''} onClick={onAllClickHandler}>All
+                <button className={filter === 'all' ? 'active-filter' : ''} onClick={onAllClickHandler}>All
                 </button>
-                <button className={filter === 'active'? 'active-filter' : ''} onClick={onActiveClickHandler}>Active
+                <button className={filter === 'active' ? 'active-filter' : ''} onClick={onActiveClickHandler}>Active
                 </button>
-                <button className={filter === 'completed'? 'active-filter' : ''} onClick={onCompletedClickHandler}>Completed
+                <button className={filter === 'completed' ? 'active-filter' : ''}
+                        onClick={onCompletedClickHandler}>Completed
                 </button>
             </div>
         </div>
