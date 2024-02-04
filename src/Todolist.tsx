@@ -10,6 +10,7 @@ type TodolistPropsType = {
     addTask: (title: string, todolistID: string) => void
     changeTaskStatus: (taskID: string, isDone: boolean, todolistID:string) => void
     filter: filterType
+    removeTodolist: (todolistID:string) => void
 }
 export type TaskType = {
     id: string
@@ -27,7 +28,7 @@ export const Todolist: FC<TodolistPropsType> = (
         addTask,
         changeTaskStatus,
         filter,
-
+        removeTodolist
     }
 ) => {
     const [newTaskTitle, setNewTaskTitle] = useState('')
@@ -74,6 +75,9 @@ export const Todolist: FC<TodolistPropsType> = (
         }
 
     }
+    const removeTodolistHandler = () => {
+        removeTodolist(id)
+    }
     const onAllClickHandler = () => {
         changeFilter('all', id)
     }
@@ -86,7 +90,7 @@ export const Todolist: FC<TodolistPropsType> = (
 
     return (
         <div className="todolist">
-            <h3>{title}</h3>
+            <h3>{title} <button onClick={removeTodolistHandler}>delete</button></h3>
             <div>
                 <input value={newTaskTitle}
                        onChange={onNewTitleChangeHandler}

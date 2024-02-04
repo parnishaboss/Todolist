@@ -19,6 +19,13 @@ function App() {
         setTasks({...tasksObg})
     }
 
+    const removeTodolist = (todolistId: string) => {
+        let filteredTodolists = todolists.filter(tl => tl.id !== todolistId)
+        setTodolists(filteredTodolists)
+        delete tasksObg[todolistId]
+        setTasks({...tasksObg})
+    }
+
     const addTask = (title: string, todolistId: string) => {
         let newTask = {id: v1(), isDone: false, title: title}
         let tasks = tasksObg[todolistId]
@@ -87,6 +94,7 @@ function App() {
                         addTask={addTask}
                         changeTaskStatus={changeStatus}
                         filter={tl.filter}
+                        removeTodolist={removeTodolist}
                     />
                 )
             })}
