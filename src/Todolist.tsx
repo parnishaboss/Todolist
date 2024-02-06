@@ -1,5 +1,6 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import {filterType} from './App';
+import {AddItemForm} from './AddItemForm';
 
 type TodolistPropsType = {
     id: string
@@ -8,9 +9,9 @@ type TodolistPropsType = {
     removeTask: (ID: string, todolistID: string) => void
     changeFilter: (value: filterType, todolistID: string) => void
     addTask: (title: string, todolistID: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean, todolistID:string) => void
+    changeTaskStatus: (taskID: string, isDone: boolean, todolistID: string) => void
     filter: filterType
-    removeTodolist: (todolistID:string) => void
+    removeTodolist: (todolistID: string) => void
 }
 export type TaskType = {
     id: string
@@ -31,8 +32,6 @@ export const Todolist: FC<TodolistPropsType> = (
         removeTodolist
     }
 ) => {
-    const [newTaskTitle, setNewTaskTitle] = useState('')
-    const [error, setError] = useState<string | null>(null)
     const listItems = tasks.map((t) => {
         const onRemoveHandler = () => {
             removeTask(t.id, id)
@@ -56,25 +55,7 @@ export const Todolist: FC<TodolistPropsType> = (
     const tasksList = tasks.length
         ? <ul>{listItems}</ul>
         : <span>No tasks. Empty list</span>
-    const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        setError(null)
-        if (e.key === 'Enter') {
-            addTask(newTaskTitle.trim(), id)
-            setNewTaskTitle('')
-        }
-    }
-    const onNewTitleChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewTaskTitle(e.currentTarget.value)
-    }
-    const addTaskHandler = () => {
-        if (newTaskTitle.trim() !== '') {
-            addTask(newTaskTitle, id)
-            setNewTaskTitle('')
-        } else {
-            setError('Field is requered')
-        }
 
-    }
     const removeTodolistHandler = () => {
         removeTodolist(id)
     }
@@ -90,15 +71,13 @@ export const Todolist: FC<TodolistPropsType> = (
 
     return (
         <div className="todolist">
-            <h3>{title} <button onClick={removeTodolistHandler}>delete</button></h3>
-            <div>
-                <input value={newTaskTitle}
-                       onChange={onNewTitleChangeHandler}
-                       onKeyDown={onKeyDownHandler}
-                       className={error ? 'error' : ''}/>
-                <button onClick={addTaskHandler}>+</button>
-                {error && <div className="error-message">{error}</div>}
-            </div>
+            <h3>{title}
+                <button onClick={removeTodolistHandler}>delete</button>
+            </h3>
+            <AddItemForm
+                id={id}
+                addItem={addTask}
+            />
             {tasksList}
             <div>
                 <button className={filter === 'all' ? 'active-filter' : ''} onClick={onAllClickHandler}>All
@@ -112,3 +91,6 @@ export const Todolist: FC<TodolistPropsType> = (
         </div>
     )
 }
+
+
+
