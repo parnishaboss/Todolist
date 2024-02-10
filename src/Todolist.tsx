@@ -68,6 +68,9 @@ export const Todolist: FC<TodolistPropsType> = (
     const onCompletedClickHandler = () => {
         changeFilter('completed', id)
     }
+    const addTask = (title:string) => {
+        addTask(title,id)
+    }
 
     return (
         <div className="todolist">

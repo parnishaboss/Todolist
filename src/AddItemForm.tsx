@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 type  addItemFormType = {
-    addItem: (title: string, todolistID: string) => void
+    addItem: (title: string) => void
     id: string
 }
 
@@ -18,14 +18,14 @@ export const AddItemForm: React.FC<addItemFormType> = ({addItem, id}) => {
     const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
         setError(null)
         if (e.key === 'Enter') {
-            addItem(newTaskTitle.trim(), id)
+            addItem(newTaskTitle.trim())
             setNewTaskTitle('')
         }
     }
 
     const addTaskHandler = () => {
         if (newTaskTitle.trim() !== '') {
-            addItem(newTaskTitle, id)
+            addItem(newTaskTitle)
             setNewTaskTitle('')
         } else {
             setError('Field is requered')
